@@ -1,0 +1,51 @@
+syntax = "proto3";
+
+option csharp_namespace = "RegionShard.Contracts";
+
+package order;
+
+// ─── Place Order ───────────────────────────────────────────────
+message PlaceOrderRequest {
+  int32  region_id   = 1;   // Shard key — which region this order belongs to
+  int32  product_id  = 2;
+  int32  quantity    = 3;
+  string customer_id = 4;
+}
+
+message PlaceOrderResponse {
+  string order_id = 1;      // GUID assigned to the new order
+  string status   = 2;      // "CONFIRMED" or "FAILED"
+  string message  = 3;      // Human-readable detail
+}
+
+// ─── Get Order ─────────────────────────────────────────────────
+message GetOrderRequest {
+  string order_id  = 1;
+  int32  region_id = 2;     // Needed to route to the correct shard
+}
+
+message GetOrderResponse {
+  string order_id    = 1;
+  int32  region_id   = 2;
+  int32  product_id  = 3;
+  int32  quantity    = 4;
+  string customer_id = 5;
+  string status      = 6;
+  string created_at  = 7;
+}
+
+// ─── List Orders (for a region) ────────────────────────────────
+message ListOrdersRequest {
+  int32 region_id = 1;
+}
+
+message ListOrdersResponse {
+  repeated GetOrderResponse orders = 1;  // "repeated" = List<T> in C#
+}
+
+// ─── Service Definition ────────────────────────────────────────
+service OrderService {
+  rpc PlaceOrder  (PlaceOrderRequest)  returns (PlaceOrderResponse);
+  rpc GetOrder    (GetOrderRequest)    returns (GetOrderResponse);
+  rpc ListOrders  (ListOrdersRequest)  returns (ListOrdersResponse);
+}

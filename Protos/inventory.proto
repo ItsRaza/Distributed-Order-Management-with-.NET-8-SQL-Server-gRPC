@@ -1,0 +1,37 @@
+syntax = "proto3";
+
+option csharp_namespace = "RegionShard.Contracts";
+
+package inventory;
+
+// ─── Check Inventory ───────────────────────────────────────────
+message CheckInventoryRequest {
+  int32 region_id  = 1;
+  int32 product_id = 2;
+  int32 quantity   = 3;   // How many units we want to reserve
+}
+
+message CheckInventoryResponse {
+  bool  available       = 1;   // true if sufficient stock exists
+  int32 available_stock = 2;   // how much is actually available
+  string message        = 3;
+}
+
+// ─── Reserve Inventory (deduct stock) ─────────────────────────
+message ReserveInventoryRequest {
+  int32  region_id  = 1;
+  int32  product_id = 2;
+  int32  quantity   = 3;
+  string order_id   = 4;   // For audit trail
+}
+
+message ReserveInventoryResponse {
+  bool   success    = 1;
+  string message    = 2;
+}
+
+// ─── Service Definition ────────────────────────────────────────
+service InventoryService {
+  rpc CheckInventory   (CheckInventoryRequest)   returns (CheckInventoryResponse);
+  rpc ReserveInventory (ReserveInventoryRequest) returns (ReserveInventoryResponse);
+}

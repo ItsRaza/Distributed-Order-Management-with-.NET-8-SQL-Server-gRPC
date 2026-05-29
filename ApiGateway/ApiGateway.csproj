@@ -6,4 +6,17 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
+	<ItemGroup>
+		<PackageReference Include="Grpc.Net.Client"  Version="2.62.0" />
+		<PackageReference Include="Google.Protobuf"  Version="3.26.0" />
+		<PackageReference Include="Grpc.Tools"       Version="2.62.0" PrivateAssets="All" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Protobuf Include="..\Protos\order.proto"     GrpcServices="Client"
+				  ProtoRoot="..\Protos\" Link="Protos\order.proto" />
+		<Protobuf Include="..\Protos\inventory.proto" GrpcServices="Client"
+				  ProtoRoot="..\Protos\" Link="Protos\inventory.proto" />
+	</ItemGroup>
+
 </Project>
